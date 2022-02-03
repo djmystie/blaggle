@@ -22,7 +22,7 @@ function App() {
   },[])
 
   const reset = () => {
-    setSecretWord(null)
+    setSecretWord(words[Math.floor(Math.random() * words.length)])
     setGuess("")
     setGameStatus({
       round1:[],
