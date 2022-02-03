@@ -39,14 +39,10 @@ function App() {
   
 
   const checkWord = () => {
-    let correct
     guess = guess.toLowerCase()
-    if(!words.includes(guess)){
-      correct = false
-    }
-    if(guess === secretWord) {
-      correct = true
-    }
+    let realWord = words.includes(guess)
+    let correct = guess === secretWord
+    
     let check = [
       guess.substring(0,1) === secretWord.substring(0,1) ? {letter:guess.substring(0,1), color:"green"} : secretWord.includes(guess.substring(0,1)) ? {letter:guess.substring(0,1), color:"yellow"} : {letter:guess.substring(0,1), color:"grey"},
       guess.substring(1,2) === secretWord.substring(1,2) ? {letter:guess.substring(1,2), color:"green"} : secretWord.includes(guess.substring(1,2)) ? {letter:guess.substring(1,2), color:"yellow"} : {letter:guess.substring(1,2), color:"grey"},
@@ -54,14 +50,15 @@ function App() {
       guess.substring(3,4) === secretWord.substring(3,4) ? {letter:guess.substring(3,4), color:"green"} : secretWord.includes(guess.substring(3,4)) ? {letter:guess.substring(3,4), color:"yellow"} : {letter:guess.substring(3,4), color:"grey"},
       guess.substring(4,5) === secretWord.substring(4,5) ? {letter:guess.substring(4,5), color:"green"} : secretWord.includes(guess.substring(4,5)) ? {letter:guess.substring(4,5), color:"yellow"} : {letter:guess.substring(4,5), color:"grey"},
     ]
-    return [check, correct]
+    return [check, realWord ,correct]
   }
 
   const submitWord = () => {
     let checked = checkWord()
     let result = checked[0]
-    let correct = checked[1]
-    if(!correct){
+    let realWord = checked[1]
+    let correct = checked[2]
+    if(!realWord){
       // Not a word
       setMessage("Not a valid word")
       return null
