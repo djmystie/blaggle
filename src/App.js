@@ -39,12 +39,13 @@ function App() {
   
 
   const checkWord = () => {
+    let correct
     guess = guess.toLowerCase()
     if(!words.includes(guess)){
-      return false
+      correct = false
     }
     if(guess === secretWord) {
-      return true
+      correct = true
     }
     let check = [
       guess.substring(0,1) === secretWord.substring(0,1) ? {letter:guess.substring(0,1), color:"green"} : secretWord.includes(guess.substring(0,1)) ? {letter:guess.substring(0,1), color:"yellow"} : {letter:guess.substring(0,1), color:"grey"},
@@ -53,17 +54,18 @@ function App() {
       guess.substring(3,4) === secretWord.substring(3,4) ? {letter:guess.substring(3,4), color:"green"} : secretWord.includes(guess.substring(3,4)) ? {letter:guess.substring(3,4), color:"yellow"} : {letter:guess.substring(3,4), color:"grey"},
       guess.substring(4,5) === secretWord.substring(4,5) ? {letter:guess.substring(4,5), color:"green"} : secretWord.includes(guess.substring(4,5)) ? {letter:guess.substring(4,5), color:"yellow"} : {letter:guess.substring(4,5), color:"grey"},
     ]
-    return check
+    return [check, correct]
   }
 
   const submitWord = () => {
-    let result = checkWord()
-    console.log(result)
-    if(!result){
+    let checked = checkWord()
+    let result = checked[0]
+    let correct = checked[1]
+    if(!correct){
       // Not a word
       setMessage("Not a valid word")
       return null
-    } else if(result === true){
+    } else if(correct === true){
       setMessage("Congratulations!")
       setGameStatus({...gameStatus, [`round${gameRound}`]:result})
       return null
@@ -81,7 +83,7 @@ function App() {
 
   const GameRow = ({round}) => {
     if(gameStatus[`round${round}`].length > 0){
-      console.log(gameStatus[`round${round}`])
+      
       return (
         <div className="gameRow">
           <div className={`square ${gameStatus[`round${round}`][0].color}`}>{gameStatus[`round${round}`][0].letter.toUpperCase()}</div>
@@ -133,7 +135,7 @@ function App() {
         
       }
     }
-console.log(guess)
+
     return (
       <div className="keyboard">
         <div className="keyboardRow">
