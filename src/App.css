@@ -82,6 +82,12 @@ header {
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
 }
+.greenKey {
+  background-color: greenyellow;
+}
+.yellowKey {
+  background-color: orange;
+}
 .resetIcon {
   width: 25px;
   height: 25px;

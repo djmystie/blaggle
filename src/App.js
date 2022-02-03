@@ -16,6 +16,7 @@ function App() {
   })
   let [gameRound, setGameRound] = useState(1)
   let [message, setMessage] = useState("")
+  let [keyboardColors, setKeyboardColors] = useState({})
 
   useEffect(()=>{
     setSecretWord(words[Math.floor(Math.random() * words.length)])
@@ -34,6 +35,7 @@ function App() {
     })
     setGameRound(1)
     setMessage("")
+    setKeyboardColors({})
     return null
   }
   
@@ -50,6 +52,7 @@ function App() {
       guess.substring(3,4) === secretWord.substring(3,4) ? {letter:guess.substring(3,4), color:"green"} : secretWord.includes(guess.substring(3,4)) ? {letter:guess.substring(3,4), color:"yellow"} : {letter:guess.substring(3,4), color:"grey"},
       guess.substring(4,5) === secretWord.substring(4,5) ? {letter:guess.substring(4,5), color:"green"} : secretWord.includes(guess.substring(4,5)) ? {letter:guess.substring(4,5), color:"yellow"} : {letter:guess.substring(4,5), color:"grey"},
     ]
+
     return [check, realWord ,correct]
   }
 
@@ -65,9 +68,12 @@ function App() {
     } else if(correct === true){
       setMessage("Congratulations!")
       setGameStatus({...gameStatus, [`round${gameRound}`]:result})
+      colorKeyboard(result)
       return null
     } else {
+      setMessage("")
       setGameStatus({...gameStatus, [`round${gameRound}`]:result})
+      colorKeyboard(result)
       if(gameRound === 6){
         setMessage(`Sorry! The word was ${secretWord.toUpperCase()}`)
       } else {
@@ -76,6 +82,20 @@ function App() {
       }
     }
 
+  }
+
+  const colorKeyboard = (result) => {
+    let currentColors = keyboardColors
+    result.forEach(letter => {
+      let newColor = null
+      if(letter.color === "green"){
+        newColor= "greenKey"
+      } else if(letter.color === "yellow"){
+        newColor = keyboardColors[letter.letter] !== "greenKey" ? "yellowKey" : keyboardColors[letter.letter]
+      }
+      currentColors = {...currentColors, [letter.letter]: newColor}
+    })
+    setKeyboardColors(keyboardColors => ({...keyboardColors, ...currentColors}))
   }
 
   const GameRow = ({round}) => {
@@ -108,7 +128,7 @@ function App() {
       row2: ['A','S','D','F','G','H','J','K','L'],
       row3: ['ENTER','Z','X','C','V','B','N','M','DEL']
     }
-
+    let keyColor = null
     const addLetter = (letter) => {
       if(letter === "ENTER"){
         if(guess.length === 5){
@@ -128,6 +148,7 @@ function App() {
           roundWord.push(nextLetter)
           setGameStatus({...gameStatus, [`round${gameRound}`]:roundWord})
           setGuess(guess => guess+letter)
+          keyColor = keyboardColors[letter] ? keyboardColors[letter] : null
         }
         
       }
@@ -137,17 +158,17 @@ function App() {
       <div className="keyboard">
         <div className="keyboardRow">
           {letters.row1.map(key =>(
-            <div className="key" key={key} onClick={() => addLetter(key)}>{key}</div>
+            <div className={`key ${keyboardColors[key.toLowerCase()]}`} key={key} onClick={() => addLetter(key)}>{key}</div>
           ))}
         </div>
         <div className="keyboardRow">
           {letters.row2.map(key =>(
-            <div className="key" key={key} onClick={() => addLetter(key)}>{key}</div>
+            <div className={`key ${keyboardColors[key.toLowerCase()]}`} key={key} onClick={() => addLetter(key)}>{key}</div>
           ))}
         </div>
         <div className="keyboardRow">
           {letters.row3.map(key =>(
-            <div className="key" key={key} onClick={() => addLetter(key)}>{key}</div>
+            <div className={`key ${keyboardColors[key.toLowerCase()]}`} key={key} onClick={() => addLetter(key)}>{key}</div>
           ))}
         </div>
       </div>
