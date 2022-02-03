@@ -92,6 +92,8 @@ function App() {
         newColor= "greenKey"
       } else if(letter.color === "yellow"){
         newColor = keyboardColors[letter.letter] !== "greenKey" ? "yellowKey" : keyboardColors[letter.letter]
+      } else if(keyboardColors[letter.letter] !== "greenKey" || keyboardColors[letter.letter] !== "yellowKey"){
+        newColor = "grayKey"
       }
       currentColors = {...currentColors, [letter.letter]: newColor}
     })
@@ -140,6 +142,7 @@ function App() {
           roundWord.pop()
           setGameStatus({...gameStatus, [`round${gameRound}`]:roundWord})
           setGuess(guess => guess.slice(0, -1))
+          setMessage("")
         }
       } else {
         if(gameStatus[`round${gameRound}`].length < 5 ) {
