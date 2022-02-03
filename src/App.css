@@ -56,6 +56,10 @@ header {
   font-weight: bold;
   margin: 20 0;
 }
+.keyboard {
+  max-width: 600px;
+  margin: 0 auto;
+}
 .keyboardRow {
   display: flex;
   justify-content: space-between;
