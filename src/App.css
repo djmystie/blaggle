@@ -1,4 +1,5 @@
 .App {
+  position: fixed;
   text-align: center;
   background-color: #282c34;
   width: 100vw;
@@ -112,4 +113,33 @@ header {
   position: fixed;
   top: 5px;
   right: 5px;
+}
+.statsContainer {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  z-index: 10;
+  justify-content: center;
+  align-items: flex-start;
+}
+.stats {
+  max-width: 400px;
+  min-width: 350px;
+  margin: 40px;
+  background-color: darkgray;
+  border: solid 4px aquamarine;
+  border-radius: 20px;
+}
+.statsDisplay {
+  display: inline-block;
+  margin-left: 5px;
+}
+.settings {
+  position: fixed;
+  top: 5px;
+  left: 5px;
+  font-size: 12px;
+  line-height: 1;
+  text-align: left;
 }

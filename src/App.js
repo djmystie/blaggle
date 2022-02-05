@@ -8,6 +8,16 @@ function App() {
   const popular = words.getMostPopularLength(2000, 5)
   const fiveLetterWords = wordList.slice(wordList.lengths[4], wordList.lengths[5])
   const filteredPopular = popular.filter(word => fiveLetterWords.includes(word))
+  let [gameStats, setGameStats] = useState({
+    played:0,
+    won:0,
+    guess1:0,
+    guess2:0,
+    guess3:0,
+    guess4:0,
+    guess5:0,
+    guess6:0
+  })
   let [secretWord, setSecretWord] = useState()
   let [guess, setGuess] = useState("")
   let [gameStatus, setGameStatus] = useState({
@@ -21,10 +31,33 @@ function App() {
   let [gameRound, setGameRound] = useState(1)
   let [message, setMessage] = useState("")
   let [keyboardColors, setKeyboardColors] = useState({})
+  let [showStats, setShowStats] = useState(true)
 
   useEffect(()=>{
     setSecretWord(filteredPopular[Math.floor(Math.random() * filteredPopular.length)])
+    let stats = JSON.parse(localStorage.getItem("gameStats"))
+    if(stats){
+      setGameStats(stats)
+    }
   },[])
+
+  const Stats = () => {
+    if(showStats){
+      
+    return (
+      <div className="statsContainer">
+        <div className="stats">
+          <h2>Your Stats</h2>
+          <ul>
+            <li>Games Played: {gameStats.played}</li>
+            <li>Games Won: {gameStats.won}</li>
+          </ul>
+        </div>
+      </div>
+    )
+    }
+    return null
+  }
 
   const reset = () => {
     setSecretWord(filteredPopular[Math.floor(Math.random() * filteredPopular.length)])
@@ -63,7 +96,7 @@ function App() {
       }
       check.push({letter:guessLetter, color:letterColor})
       }
-    console.log(dupesUsed)
+    
 
     let makeOrange = []
     dupesUsed.forEach(dupe => {
@@ -95,6 +128,14 @@ function App() {
       setMessage("Congratulations!")
       setGameStatus({...gameStatus, [`round${gameRound}`]:result})
       colorKeyboard(result)
+      let newStats = {
+        ...gameStats,
+        played: gameStats.played + 1,
+        won: gameStats.won + 1,
+        [`guess${gameRound}`]: gameStats[`guess${gameRound}`]+1
+      }
+      setGameStats(newStats)
+      localStorage.setItem("gameStats", JSON.stringify(newStats))
       return null
     } else {
       setMessage("")
@@ -102,6 +143,12 @@ function App() {
       colorKeyboard(result)
       if(gameRound === 6){
         setMessage(`Sorry! The word was ${secretWord.toUpperCase()}`)
+        let newStats = {
+          ...gameStats,
+          played: gameStats.played + 1
+        }
+        setGameStats(newStats)
+        localStorage.setItem("gameStats", JSON.stringify(newStats))
       } else {
         setGuess("")
         setGameRound(gameRound => gameRound+1)
@@ -184,7 +231,7 @@ function App() {
       }
     }
  
-
+    
     return (
       <div className="keyboard">
         <div className="keyboardRow">
@@ -214,7 +261,15 @@ function App() {
 
   return (
     <div className="App">
-      <header>BLAGGLE<span className="reset"><img src="resetIcon.png" className="resetIcon" onClick={()=>reset()} /></span></header>
+      {/* <Stats /> */}
+      <header>
+      <div className="settings">
+        <img src="settings.png" className="resetIcon"/>
+          <div className="statsDisplay">P: {gameStats.played}<br/> W: {gameStats.won}</div>
+         </div>
+        BLAGGLE
+        <span className="reset"><img src="resetIcon.png" className="resetIcon" onClick={()=>reset()} /></span>
+      </header>
       <div className="gameBoard">
         <GameRow round="1" />
         <GameRow round="2" />
