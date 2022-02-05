@@ -2,6 +2,7 @@ import wordList from 'word-list-json'
 import { useState, useEffect } from 'react'
 import './App.css';
 import {words} from 'popular-english-words'
+import _ from 'lodash'
 
 function App() {
   const popular = words.getMostPopularLength(2000, 5)
@@ -48,14 +49,36 @@ function App() {
     let realWord = fiveLetterWords.includes(guess)
     let correct = guess === secretWord
     
-    let check = [
-      guess.substring(0,1) === secretWord.substring(0,1) ? {letter:guess.substring(0,1), color:"green"} : secretWord.includes(guess.substring(0,1)) ? {letter:guess.substring(0,1), color:"yellow"} : {letter:guess.substring(0,1), color:"grey"},
-      guess.substring(1,2) === secretWord.substring(1,2) ? {letter:guess.substring(1,2), color:"green"} : secretWord.includes(guess.substring(1,2)) ? {letter:guess.substring(1,2), color:"yellow"} : {letter:guess.substring(1,2), color:"grey"},
-      guess.substring(2,3) === secretWord.substring(2,3) ? {letter:guess.substring(2,3), color:"green"} : secretWord.includes(guess.substring(2,3)) ? {letter:guess.substring(2,3), color:"yellow"} : {letter:guess.substring(2,3), color:"grey"},
-      guess.substring(3,4) === secretWord.substring(3,4) ? {letter:guess.substring(3,4), color:"green"} : secretWord.includes(guess.substring(3,4)) ? {letter:guess.substring(3,4), color:"yellow"} : {letter:guess.substring(3,4), color:"grey"},
-      guess.substring(4,5) === secretWord.substring(4,5) ? {letter:guess.substring(4,5), color:"green"} : secretWord.includes(guess.substring(4,5)) ? {letter:guess.substring(4,5), color:"yellow"} : {letter:guess.substring(4,5), color:"grey"},
-    ]
+    let check = []
+    let dupesUsed = []
+    for(let i=0; i<5; i++){
+      let guessLetter = guess.substring(i, i+1)
+      let wordLetter = secretWord.substring(i, i+1)
+      let timesUsed = _.countBy(guess)[guessLetter]
+      let timesUsedInWord = _.countBy(secretWord)[guessLetter]
+      let duplicatedLetter = timesUsed > timesUsedInWord
+      let letterColor = guessLetter === wordLetter ? "green" : secretWord.includes(guessLetter) && !duplicatedLetter ? "yellow" : "grey"
+      if(duplicatedLetter){
+        dupesUsed.push({position:i, color:letterColor})
+      }
+      check.push({letter:guessLetter, color:letterColor})
+      }
+    console.log(dupesUsed)
 
+    let makeOrange = []
+    dupesUsed.forEach(dupe => {
+      if(dupe.color === "grey"){
+        makeOrange.push(dupe.position)
+      } else {
+        makeOrange = []
+      }
+    })
+    makeOrange.pop()
+    if(makeOrange.length > 0){
+      makeOrange.forEach(orange => {
+        check[orange] = {...check[orange], color:"yellow"}
+      })
+    }
     return [check, realWord ,correct]
   }
 
@@ -89,6 +112,7 @@ function App() {
 
   const colorKeyboard = (result) => {
     let currentColors = keyboardColors
+    
     result.forEach(letter => {
       let newColor = null
       if(letter.color === "green"){
@@ -96,7 +120,7 @@ function App() {
       } else if(letter.color === "yellow"){
         newColor = keyboardColors[letter.letter] !== "greenKey" ? "yellowKey" : keyboardColors[letter.letter]
       } else if(keyboardColors[letter.letter] !== "greenKey" || keyboardColors[letter.letter] !== "yellowKey"){
-        newColor = "grayKey"
+        newColor = currentColors[letter.letter] ? currentColors[letter.letter] : "grayKey"
       }
       currentColors = {...currentColors, [letter.letter]: newColor}
     })
