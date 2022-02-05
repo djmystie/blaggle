@@ -13,7 +13,7 @@ header {
 .gameBoard {
   min-width: 280px;
   min-height: 280px;
-  margin: 20px 0;
+  margin: 20px 0 10px 0;
 }
 .gameRow {
   display: flex;
@@ -48,13 +48,13 @@ header {
   border: solid 2px grey;
 }
 .messageRow {
-  height: 50px;
+  height: 30px;
   width: 100vw;
   text-align: center;
   color: whitesmoke;
   font-size: 18px;
   font-weight: bold;
-  margin: 20 0;
+  margin: 0 0 10px 0;
 }
 .keyboard {
   max-width: 600px;
@@ -62,8 +62,8 @@ header {
 }
 .keyboardRow {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
   width: 100%;
 }
 .key {
@@ -71,6 +71,8 @@ header {
   border-radius: 4px;
   margin: 3px;
   height: 40px;
+  /* width: 25px; */
+  max-width: 30px;
   color: black;
   font-size: 24px;
   font-weight: bold;
@@ -81,6 +83,14 @@ header {
   -khtml-user-select: none; /* Konqueror HTML */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
+}
+.enter {
+  max-width: 60px;
+  font-size: 18px;
+}
+.del {
+  max-width: 40px;
+  font-size: 18px;
 }
 .greenKey {
   background-color: greenyellow;

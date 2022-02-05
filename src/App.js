@@ -156,6 +156,7 @@ function App() {
         
       }
     }
+ 
 
     return (
       <div className="keyboard">
@@ -171,7 +172,13 @@ function App() {
         </div>
         <div className="keyboardRow">
           {letters.row3.map(key =>(
-            <div className={`key ${keyboardColors[key.toLowerCase()]}`} key={key} onClick={() => addLetter(key)}>{key}</div>
+            <div className={
+              key === 'ENTER' 
+                ? `key ${keyboardColors[key.toLowerCase()]} enter`
+                : key === "DEL" ? `key ${keyboardColors[key.toLowerCase()]} del` 
+                : `key ${keyboardColors[key.toLowerCase()]}`} 
+              key={key} 
+              onClick={() => addLetter(key)}>{key}</div>
           ))}
         </div>
       </div>
