@@ -1,9 +1,12 @@
 import wordList from 'word-list-json'
 import { useState, useEffect } from 'react'
 import './App.css';
+import {words} from 'popular-english-words'
 
 function App() {
-  const words = wordList.slice(wordList.lengths[4], wordList.lengths[5])
+  const popular = words.getMostPopularLength(2000, 5)
+  const fiveLetterWords = wordList.slice(wordList.lengths[4], wordList.lengths[5])
+  const filteredPopular = popular.filter(word => fiveLetterWords.includes(word))
   let [secretWord, setSecretWord] = useState()
   let [guess, setGuess] = useState("")
   let [gameStatus, setGameStatus] = useState({
@@ -19,11 +22,11 @@ function App() {
   let [keyboardColors, setKeyboardColors] = useState({})
 
   useEffect(()=>{
-    setSecretWord(words[Math.floor(Math.random() * words.length)])
+    setSecretWord(filteredPopular[Math.floor(Math.random() * filteredPopular.length)])
   },[])
 
   const reset = () => {
-    setSecretWord(words[Math.floor(Math.random() * words.length)])
+    setSecretWord(filteredPopular[Math.floor(Math.random() * filteredPopular.length)])
     setGuess("")
     setGameStatus({
       round1:[],
@@ -42,7 +45,7 @@ function App() {
 
   const checkWord = () => {
     guess = guess.toLowerCase()
-    let realWord = words.includes(guess)
+    let realWord = fiveLetterWords.includes(guess)
     let correct = guess === secretWord
     
     let check = [
