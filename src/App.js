@@ -32,6 +32,7 @@ function App() {
   let [message, setMessage] = useState("")
   let [keyboardColors, setKeyboardColors] = useState({})
   let [showStats, setShowStats] = useState(true)
+  let [gameEnded, setGameEnded] = useState(false)
 
   useEffect(()=>{
     setSecretWord(filteredPopular[Math.floor(Math.random() * filteredPopular.length)])
@@ -40,24 +41,6 @@ function App() {
       setGameStats(stats)
     }
   },[])
-
-  const Stats = () => {
-    if(showStats){
-      
-    return (
-      <div className="statsContainer">
-        <div className="stats">
-          <h2>Your Stats</h2>
-          <ul>
-            <li>Games Played: {gameStats.played}</li>
-            <li>Games Won: {gameStats.won}</li>
-          </ul>
-        </div>
-      </div>
-    )
-    }
-    return null
-  }
 
   const reset = () => {
     setSecretWord(filteredPopular[Math.floor(Math.random() * filteredPopular.length)])
@@ -73,6 +56,7 @@ function App() {
     setGameRound(1)
     setMessage("")
     setKeyboardColors({})
+    setGameEnded(false)
     return null
   }
   
@@ -125,6 +109,7 @@ function App() {
       setMessage("Not a valid word")
       return null
     } else if(correct === true){
+      setGameEnded(true)
       setMessage("Congratulations!")
       setGameStatus({...gameStatus, [`round${gameRound}`]:result})
       colorKeyboard(result)
@@ -142,6 +127,7 @@ function App() {
       setGameStatus({...gameStatus, [`round${gameRound}`]:result})
       colorKeyboard(result)
       if(gameRound === 6){
+        setGameEnded(true)
         setMessage(`Sorry! The word was ${secretWord.toUpperCase()}`)
         let newStats = {
           ...gameStats,
@@ -206,6 +192,7 @@ function App() {
     }
     let keyColor = null
     const addLetter = (letter) => {
+      if(gameEnded){ return null}
       if(letter === "ENTER"){
         if(guess.length === 5){
           submitWord()
