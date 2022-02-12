@@ -96,7 +96,7 @@ function App() {
         check[orange] = {...check[orange], color:"yellow"}
       })
     }
-    return [check, realWord ,correct]
+    return [check, realWord ,correct, guess]
   }
 
   const submitWord = () => {
@@ -104,9 +104,11 @@ function App() {
     let result = checked[0]
     let realWord = checked[1]
     let correct = checked[2]
+    let guess = checked[3]
     if(!realWord){
       // Not a word
-      setMessage("Not a valid word")
+      if(guess === 'blagg'){setMessage("Awesome choice but still not valid!")}
+      else {setMessage("Not a valid word")}
       return null
     } else if(correct === true){
       setGameEnded(true)
